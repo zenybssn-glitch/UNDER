@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNDER // Centro de Información</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #07070a;
+    --bg-2: #0d0d12;
+    --red: #ff0033;
+    --red-dark: #a80022;
+    --cyan: #00e5ff;
+    --purple: #a855f7;
+    --gold: #ffd700;
+    --text: #e5e5e5;
+    --muted: #7a7a85;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.5;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* TEXTURA DE RUIDO GLOBAL */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: rgba(7,7,10,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,0,51,0.25);
+  }
+
+  .logo {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: -1px;
+    color: #fff;
+    text-shadow: 3px 3px 0 var(--red);
+    transform: rotate(-2deg);
+  }
+
+  .nav-links {
+    display: flex; gap: 1.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--red); }
+
+  /* HERO */
+  .hero {
+    padding: 5rem 5% 3rem;
+    text-align: center;
+    border-bottom: 1px dashed #222;
+  }
+
+  .hero h1 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    color: #fff;
+    transform: rotate(-1.5deg);
+    text-shadow: 4px 4px 0 var(--red);
+    line-height: 1;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 1rem;
+  }
+
+  /* SECCIONES GENERALES */
+  section.block {
+    padding: 4rem 5%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .block-header {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .block-header h2 {
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: #fff;
+  }
+
+  .block-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--red), transparent);
+  }
+
+  /* ============ SECCIÓN 1: NOTICIAS DEL UNDER ============ */
+  /* Estética: cruda, papel de diario roto, tipografía grande */
+  #noticias {
+    background: var(--bg-2);
+    border-left: 3px solid var(--red);
+  }
+
+  #noticias .block-header h2 { text-shadow: 2px 2px 0 var(--red-dark); }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .news-card {
+    background: #101016;
+    border: 1px solid #1f1f28;
+    padding: 1.5rem;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 96%, 97% 100%, 0 100%);
+    transition: border-color 0.25s, transform 0.25s;
+  }
+
+  .news-card:hover {
+    border-color: var(--red);
+    transform: translateY(-4px);
+  }
+
+  .news-card .meta {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #1f1f28;
+    padding-bottom: 0.5rem;
+  }
+
+  .news-card h3 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.15rem;
+    color: #fff;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+
+  .news-card p {
+    color: #999;
+    font-size: 0.85rem;
+  }
+
+  /* ============ SECCIÓN 2: EDATEOS ACTIVOS ============ */
+  /* Estética: panel de control / terminal / cards con vidrio */
+  #edateos {
+    background: radial-gradient(ellipse at top left, rgba(0,229,255,0.08), transparent 60%);
+  }
+
+  #edateos .block-header h2 { color: var(--cyan); text-shadow: 0 0 20px rgba(0,229,255,0.4); }
+  #edateos .block-header .line { background: linear-gradient(90deg, var(--cyan), transparent); }
+
+  .edateos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  /* VASO CON LEAN DE DISEÑO (GLASSMORPHISM) */
+  .glass-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.4rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.6;
+  }
+
+  .glass-card:hover {
+    border-color: rgba(0,229,255,0.5);
+    transform: translateY(-3px);
+  }
+
+  .glass-card .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cyan);
+    margin-bottom: 0.8rem;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: pulse 1.6s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .glass-card h3 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .glass-card p {
+    color: #9aa;
+    font-size: 0.8rem;
+  }
+
+  /* ============ SECCIÓN 3: EVENTOS ============ */
+  /* Estética: cartelera / afiche / fechas grandes */
+  #eventos {
+    background: var(--bg-2);
+    border-right: 3px solid var(--purple);
+  }
+
+  #eventos .block-header h2 { color: var(--purple); text-shadow: 0 0 20px rgba(168,85,247,0.35); }
+  #eventos .block-header .line { background: linear-gradient(90deg, var(--purple), transparent); }
+
+  .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .event-row {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 1.2rem;
+    align-items: center;
+    background: #101016;
+    border: 1px solid #1f1f28;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--purple);
+    transition: background 0.25s, transform 0.25s;
+  }
+
+  .event-row:hover {
+    background: #14141c;
+    transform: translateX(6px);
+  }
+
+  .event-date {
+    font-family: 'Arial Black', sans-serif;
+    text-align: center;
+    line-height: 1;
+    color: var(--purple);
+  }
+
+  .event-date .day { font-size: 1.8rem; display: block; }
+  .event-date .month { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
+
+  .event-info h3 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1rem;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  .event-info p { color: var(--muted); font-size: 0.75rem; }
+
+  .event-tag {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--purple);
+    color: var(--purple);
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  /* ============ SECCIÓN 4: VOTACIONES PREMIOS UNDER ============ */
+  /* Estética: trofeo / oro / vidrio premium */
+  #premios {
+    background: radial-gradient(ellipse at center, rgba(255,215,0,0.06), transparent 65%);
+  }
+
+  #premios .block-header h2 {
+    background: linear-gradient(135deg, var(--gold), #fff8c4, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #premios .block-header .line { background: linear-gradient(90deg, var(--gold), transparent); }
+
+  .premios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.3rem;
+  }
+
+  .premio-card {
+    background: linear-gradient(160deg, rgba(255,215,0,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 18px;
+    padding: 1.6rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    text-align: center;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .premio-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+    box-shadow: 0 12px 40px rgba(255,215,0,0.15);
+  }
+
+  .premio-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.6rem;
+    filter: drop-shadow(0 0 12px rgba(255,215,0,0.4));
+  }
+
+  .premio-card h3 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+
+  .premio-card p {
+    color: #a99;
+    font-size: 0.78rem;
+    margin-bottom: 1rem;
+  }
+
+  .premio-votes {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.35);
+    color: var(--gold);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2.5rem 5%;
+    border-top: 1px dashed #222;
+    color: #444;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .event-row { grid-template-columns: 70px 1fr; }
+    .event-tag { grid-column: 1 / -1; justify-self: start; }
+    section.block { padding: 3rem 5%; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">UNDER</div>
+    <ul class="nav-links">
+      <li><a href="#noticias">Noticias</a></li>
+      <li><a href="#edateos">Edateos</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+      <li><a href="#premios">Premios</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>UNDER</h1>
+    <p>Centro de información // sin filtro</p>
+  </div>
+
+  <!-- ============ 1. NOTICIAS DEL UNDER ============ -->
+  <section class="block" id="noticias">
+    <div class="block-header">
+      <h2>Noticias del Under</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="news-grid">
+      <!-- EDITÁ ACÁ: duplicá esta card por cada noticia -->
+      <article class="news-card">
+        <div class="meta">Fecha // Autor</div>
+        <h3>Título de la noticia</h3>
+        <p>Acá va el texto de la noticia. Reemplazá este contenido por lo que quieras publicar.</p>
+      </article>
+
+      <article class="news-card">
+        <div class="meta">Fecha // Autor</div>
+        <h3>Título de la noticia</h3>
+        <p>Acá va el texto de la noticia. Reemplazá este contenido por lo que quieras publicar.</p>
+      </article>
+
+      <article class="news-card">
+        <div class="meta">Fecha // Autor</div>
+        <h3>Título de la noticia</h3>
+        <p>Acá va el texto de la noticia. Reemplazá este contenido por lo que quieras publicar.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 2. EDATEOS ACTIVOS ============ -->
+  <section class="block" id="edateos">
+    <div class="block-header">
+      <h2>Edateos Activos</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="edateos-grid">
+      <!-- EDITÁ ACÁ: duplicá esta glass-card por cada edateo -->
+      <div class="glass-card">
+        <div class="status"><span class="status-dot"></span> Activo</div>
+        <h3>Nombre del edateo</h3>
+        <p>Descripción breve del edateo. Reemplazá este texto por el tuyo.</p>
+      </div>
+
+      <div class="glass-card">
+        <div class="status"><span class="status-dot"></span> Activo</div>
+        <h3>Nombre del edateo</h3>
+        <p>Descripción breve del edateo. Reemplazá este texto por el tuyo.</p>
+      </div>
+
+      <div class="glass-card">
+        <div class="status"><span class="status-dot"></span> Activo</div>
+        <h3>Nombre del edateo</h3>
+        <p>Descripción breve del edateo. Reemplazá este texto por el tuyo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. EVENTOS ============ -->
+  <section class="block" id="eventos">
+    <div class="block-header">
+      <h2>Eventos</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="event-list">
+      <!-- EDITÁ ACÁ: duplicá esta fila por cada evento -->
+      <div class="event-row">
+        <div class="event-date">
+          <span class="day">00</span>
+          <span class="month">MES</span>
+        </div>
+        <div class="event-info">
+          <h3>Nombre del evento</h3>
+          <p>Descripción breve o lugar del evento. Reemplazá este texto.</p>
+        </div>
+        <span class="event-tag">Categoría</span>
+      </div>
+
+      <div class="event-row">
+        <div class="event-date">
+          <span class="day">00</span>
+          <span class="month">MES</span>
+        </div>
+        <div class="event-info">
+          <h3>Nombre del evento</h3>
+          <p>Descripción breve o lugar del evento. Reemplazá este texto.</p>
+        </div>
+        <span class="event-tag">Categoría</span>
+      </div>
+
+      <div class="event-row">
+        <div class="event-date">
+          <span class="day">00</span>
+          <span class="month">MES</span>
+        </div>
+        <div class="event-info">
+          <h3>Nombre del evento</h3>
+          <p>Descripción breve o lugar del evento. Reemplazá este texto.</p>
+        </div>
+        <span class="event-tag">Categoría</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. VOTACIONES PREMIOS UNDER ============ -->
+  <section class="block" id="premios">
+    <div class="block-header">
+      <h2>Votaciones Premios Under</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="premios-grid">
+      <!-- EDITÁ ACÁ: duplicá esta premio-card por cada categoría -->
+      <div class="premio-card">
+        <div class="premio-icon">🏆</div>
+        <h3>Categoría del premio</h3>
+        <p>Descripción de la categoría. Reemplazá este texto por el tuyo.</p>
+        <span class="premio-votes">Votar</span>
+      </div>
+
+      <div class="premio-card">
+        <div class="premio-icon">🥇</div>
+        <h3>Categoría del premio</h3>
+        <p>Descripción de la categoría. Reemplazá este texto por el tuyo.</p>
+        <span class="premio-votes">Votar</span>
+      </div>
+
+      <div class="premio-card">
+        <div class="premio-icon">🎖️</div>
+        <h3>Categoría del premio</h3>
+        <p>Descripción de la categoría. Reemplazá este texto por el tuyo.</p>
+        <span class="premio-votes">Votar</span>
+      </div>
+
+      <div class="premio-card">
+        <div class="premio-icon">⭐</div>
+        <h3>Categoría del premio</h3>
+        <p>Descripción de la categoría. Reemplazá este texto por el tuyo.</p>
+        <span class="premio-votes">Votar</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    UNDER © 2026 // Sin derechos reservados
+  </footer>
+
+</body>
+</html>
